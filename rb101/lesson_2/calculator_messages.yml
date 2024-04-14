@@ -1,0 +1,7 @@
+
+welcome: "Welcome to Calculator! Enter your name:"
+valid_name: "Make sure to enter a valid name."
+valid_number: "Hmm... doesn't look like this is a valid number"
+valid_op: "You must chooe 1,2,3 or 4,"
+repeat?: "would you like preform another calculation? (Y to calculate again)"
+# ... rest of file omitted for brevity
