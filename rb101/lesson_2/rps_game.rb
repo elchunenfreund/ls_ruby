@@ -1,46 +1,74 @@
-VALID_CHIOCES = ['rock', 'paper', 'scissors']
+VALID_CHOICES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
 
 def prompt(message)
   puts "=> #{message}"
 end
 
-def win?(first, second)
-  (first == 'rock' && second == 'scissors') ||
-    (first == 'paper' && second == 'rock') ||
-    (first == 'scissors' && second == 'paper')
+MOVES = { rock: ["scissors", "lizard"],
+          paper: ['rock', 'spock'],
+          scissors: ['paper', 'lizard'],
+          lizard: ['paper', 'spock'],
+          spock: ['scissors', 'rock'] }
+
+def win?(hash, first, second)
+  hash[first.to_sym].include?(second)
 end
 
-def display_result(player, computer)
-  if win?(player, computer)
-    prompt('Congratz man, you won!!')
-  elsif win?(computer, player)
-    prompt('You lost to a computer, dummy')
+def choose_winner(array, player, computer)
+  if win?(array, player, computer)
+    'player'
+  elsif win?(array, computer, player)
+    'computer'
   else
     prompt("It's a tie")
   end
 end
 
 choice = ''
+player_wins = 0
+computer_wins = 0
 
 loop do
   loop do
-    prompt("Choose one: #{VALID_CHIOCES.join(', ')}")
-    choice = gets.chomp
+    loop do
+      prompt("Choose one: #{VALID_CHOICES.join(', ')}")
+      choice = gets.chomp
 
-    if VALID_CHIOCES.include?(choice.downcase)
+      if VALID_CHOICES.include?(choice.downcase)
+        break
+      else
+        prompt("thats not a valid choice.")
+      end
+    end
+
+    computer_choice = VALID_CHOICES.sample
+
+    prompt("You chose #{choice}, and the computer choose #{computer_choice}.")
+
+    result = choose_winner(MOVES, choice, computer_choice)
+
+    case result
+    when 'player'
+      player_wins += 1
+    when 'computer'
+      computer_wins += 1
+    end
+
+    prompt("Player wins: #{player_wins}, Computer wins: #{computer_wins}")
+
+    if player_wins == 3
+      prompt('you are the grand winner')
       break
-    else
-      prompt("thats not a valid choice.")
+    elsif computer_wins == 3
+      prompt('you are the grand looser')
+      break
     end
   end
 
-  computer_choice = VALID_CHIOCES.sample
+  player_wins = 0
+  computer_wins = 0
 
-  prompt("You chose #{choice}, and the computer choose #{computer_choice}.")
-
-  display_result(choice, computer_choice)
-
-  prompt('Do you want to play again')
+  prompt('Do you want to play again?')
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
 end
