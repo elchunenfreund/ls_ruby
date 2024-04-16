@@ -1,14 +1,28 @@
 VALID_CHOICES = ['rock', 'paper', 'scissors', 'spock', 'lizard']
 
-def prompt(message)
-  puts "=> #{message}"
-end
-
 MOVES = { rock: ['scissors', 'lizard'],
           paper: ['rock', 'spock'],
           scissors: ['paper', 'lizard'],
           lizard: ['spock', 'paper'],
           spock: ['scissors', 'rock'] }
+
+def prompt(message)
+  puts "=> #{message}"
+end
+
+def user_input(input)
+  if input.start_with?('r')
+    'rock'
+  elsif input.start_with?('p')
+    'paper'
+  elsif input.start_with?('sc')
+    'scissors'
+  elsif input.start_with?('l')
+    'lizard'
+  elsif input.start_with?('sp')
+    'spock'
+  end
+end
 
 def win?(hash, first, second)
   hash[first.to_sym].include?(second)
@@ -32,9 +46,10 @@ loop do
   loop do
     loop do
       prompt("Choose one: #{VALID_CHOICES.join(', ')}")
-      choice = gets.chomp
+      players_choice = gets.chomp
+      choice = user_input(players_choice)
 
-      if VALID_CHOICES.include?(choice.downcase)
+      if VALID_CHOICES.include?(choice)
         break
       else
         prompt("thats not a valid choice.")
