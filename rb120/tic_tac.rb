@@ -27,7 +27,7 @@ class Board
   end
 
   def someone_won?
-    !!detect_winner
+    !!winning_marker
   end
 
   def count_human_marker(squares)
@@ -39,7 +39,7 @@ class Board
   end
 
   # returns winning marker or nil
-  def detect_winner
+  def winning_marker
     WINNING_LINES.each do |line|
       if count_human_marker(@squares.values_at(*line)) == 3
         return TTTGame::HUMAN_MARKER
@@ -102,8 +102,7 @@ class TTTGame
     puts "Thanks for playing Tic Tac Toe! Goodbye!"
   end
   
-  def display_board(clear = true)
-    system 'clear' if clear
+  def display_board
     puts "You're a #{human.marker}. Computer is a #{computer.marker}"
     puts ""
     puts "     |     |"
@@ -137,9 +136,9 @@ class TTTGame
   end
     
   def display_result
-    display_board
+    clear_screen_and_display_board
 
-    case board.detect_winner
+    case board.winning_marker
     when human.marker
       puts "You won!"
     when computer.marker
@@ -160,13 +159,32 @@ class TTTGame
 
     answer == 'y'
   end
+
+  def clear
+    system 'clear'
+  end
+
+  def clear_screen_and_display_board
+    clear
+    display_board
+  end
+
+  def reset
+    board.reset
+    clear
+  end
+  
+  def display_play_again_message
+    puts "Let's play again!"
+    puts ""
+  end
   
   def play
-    system 'clear'
+    clear
     display_welcome_message
 
     loop do
-      display_board(false)
+      display_board
 
       loop do
         human_moves
@@ -179,10 +197,8 @@ class TTTGame
       end
       display_result
       break unless play_again?
-      board.reset
-      system 'clear'
-      puts "Let's play again!"
-      puts ""
+      reset
+      display_play_again_message
     end
 
     display_goodbye_message
