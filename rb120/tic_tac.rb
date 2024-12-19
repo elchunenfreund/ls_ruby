@@ -56,7 +56,6 @@ class Board
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
-
   private
 
   def three_identical_markers?(squares)
@@ -163,8 +162,19 @@ class TTTGame
     puts ""
   end
 
+  def joinor(arr, spacer = ', ', delemiter = 'or')
+    if arr.size == 1
+      arr[0]
+    elsif arr.size == 2
+      "#{arr[0]} #{delemiter} #{arr[1]}"
+    else
+      arr[-1] = "#{delemiter} #{arr.last}"
+      arr.join("#{spacer}")
+    end
+  end
+  
   def human_moves
-    puts "Choose a square (#{board.unmarked_keys.join(', ')}): "
+    puts "Choose a square (#{joinor(board.unmarked_keys)}): "
     square = nil
     loop do
       square = gets.chomp.to_i
