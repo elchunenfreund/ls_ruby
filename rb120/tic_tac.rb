@@ -56,6 +56,16 @@ class Board
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
+  def risky_square(line, brd)
+    if brd.values_at(*line).count(PLAYER_MARKER) == 2
+      marker = brd.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
+    end
+  end
+
+  def winning_squares
+
+  end
+
   private
 
   def three_identical_markers?(squares)
@@ -93,6 +103,14 @@ class Player
   def initialize(marker)
     @marker = marker
   end
+
+  def defense_move
+    board[board.risky_squares.sample] = computer.marker
+  end
+
+  def offense_move
+    board[board.winning_squares.sample] = computer.marker
+  end
 end
 
 class TTTGame
@@ -102,6 +120,9 @@ class TTTGame
 
   attr_reader :board, :human, :computer
 
+  @@player_grand_score = 0
+  @@computer_grand_score = 0
+
   def initialize
     @board = Board.new
     @human = Player.new(HUMAN_MARKER)
@@ -110,9 +131,12 @@ class TTTGame
   end
 
   def play
-    clear
-    display_welcome_message
-    main_game
+    loop do
+      clear
+      display_welcome_message
+      main_game
+      break unless play_again?
+    end
     display_goodbye_message
   end
 
@@ -123,6 +147,8 @@ class TTTGame
       display_board
       player_move
       display_result
+      break if display_grand_winner
+      display_grand_score
       break unless play_again?
       reset
       display_play_again_message
@@ -172,7 +198,7 @@ class TTTGame
       arr.join("#{spacer}")
     end
   end
-  
+
   def human_moves
     puts "Choose a square (#{joinor(board.unmarked_keys)}): "
     square = nil
@@ -186,6 +212,11 @@ class TTTGame
   end
 
   def computer_moves
+    if computer.offense_move
+      return true
+    elsif computer.defense_move
+      return true
+    end
     board[board.unmarked_keys.sample] = computer.marker
   end
 
@@ -205,11 +236,28 @@ class TTTGame
     case board.winning_marker
     when human.marker
       puts "You won!"
+      @@player_grand_score += 1
     when computer.marker
       puts "Computer won!"
+      @@computer_grand_score += 1
     else
       puts "It's a tie!"
     end
+  end
+
+  def display_grand_score
+    puts "Your score: #{@@player_grand_score}, computer score: #{@@computer_grand_score}"
+  end
+
+  def display_grand_winner
+    if @@player_grand_score >= 5
+      puts "Congrats, so you are good at something?!"
+      return true
+    elsif @@computer_grand_score >= 5
+      puts "Iv'e always known you to be a loser!"
+      return true
+    end
+    false
   end
 
   def play_again?
