@@ -36,6 +36,14 @@ end
 class Game
   def initialize
   end
+
+  def start
+    deal_cards
+    show_initial_cards
+    player_turn
+    dealer_turn
+    show_result
+  end
 end
 
 Game.new.start
