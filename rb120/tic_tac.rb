@@ -110,25 +110,23 @@ class TTTGame
 
   COMPUTER_MARKER = "O"
 
-  @@player_grand_score = 0
-  @@computer_grand_score = 0
-
   def initialize
     @board = Board.new
     @human = Player.new(choose_player_name, choose_player_marker)
     @computer = Player.new(computer_name_picker, COMPUTER_MARKER)
     @current_marker = @human.marker
+    @player_grand_score = 0
+    @computer_grand_score = 0
   end
 
   def play
     loop do
-      clear
       display_welcome_message
       main_game
+      grand_reset
       break unless play_again?
-      reset
+      display_goodbye_message
     end
-    display_goodbye_message
   end
 
   private
@@ -269,24 +267,24 @@ class TTTGame
     case board.winning_marker
     when human.marker
       puts "You won!"
-      @@player_grand_score += 1
+      @player_grand_score += 1
     when computer.marker
       puts "Computer won!"
-      @@computer_grand_score += 1
+      @computer_grand_score += 1
     else
       puts "It's a tie!"
     end
   end
 
   def display_grand_score
-    puts "#{human.name} score: #{@@player_grand_score}, #{computer.name} score: #{@@computer_grand_score}"
+    puts "#{human.name} score: #{@player_grand_score}, #{computer.name} score: #{@computer_grand_score}"
   end
 
   def display_grand_winner
-    if @@player_grand_score >= 5
+    if @player_grand_score >= 5
       puts "Congratulations, you're the grand winner!"
       return true
-    elsif @@computer_grand_score >= 5
+    elsif @computer_grand_score >= 5
       puts "#{computer.name} is the grand winner. Better luck next time!"
       return true
     end
@@ -309,6 +307,12 @@ class TTTGame
     system "clear"
   end
 
+  def grand_reset
+    reset
+    @player_grand_score = 0
+    @computer_grand_score = 0
+  end
+  
   def reset
     board.reset
     @current_marker = human.marker
