@@ -126,6 +126,7 @@ class TTTGame
       display_welcome_message
       main_game
       break unless play_again?
+      reset
     end
     display_goodbye_message
   end
