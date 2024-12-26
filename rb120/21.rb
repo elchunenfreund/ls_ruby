@@ -1,6 +1,48 @@
-class Player
-  def initialize
+module Hand
+  @hand = []
+end
 
+class Player
+  include Hand
+  def initialize
+    @hand = Hand.new
+  end
+
+  def hit
+    deck.deal
+  end
+
+  def stay
+  end
+
+  def busted?
+    total > 21
+  end
+
+  def total
+    values = hand.map {hand[1]}.sum
+
+    sum = 0
+    values.each do |value|
+      if value == "A"
+        sum += 11
+      elsif value.to_i == 0 # J, Q, K
+        sum += 10
+      else
+        sum += value.to_i
+      end
+    end
+
+    values.select { |value| value == "A" }.count.times do
+      sum -= 10 if sum > 21
+    end
+  end
+end
+
+class Dealer
+  include Hand
+  def initialize
+    @hand = Hand.new
   end
 
   def hit
@@ -21,10 +63,19 @@ class Participant
 end
 
 class Deck
+  attr_accessor :cards
+
+  SUITS = ['H', 'D', 'S', 'C']
+  VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+  BUST_VALUE = 21
+  DEALER_MAX = 17
+
   def initialize
+    @cards = SUITS.product(VALUES).shuffle
   end
 
-  def deal
+  def deal(player)
+    player.hand << cards.pop
   end
 end
 
