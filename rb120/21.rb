@@ -2,17 +2,25 @@ module Hand
   @hand = []
 end
 
-class Player
+class Player < Participant
+end
+
+class Dealer < Participant
+end
+
+class Participant
   include Hand
   def initialize
     @hand = Hand.new
   end
 
   def hit
-    deck.deal
+    Game::deck.deal
+    puts "You choose to hit, your total is #{total}"
   end
 
   def stay
+    puts "You choose to stay"
   end
 
   def busted?
@@ -39,29 +47,6 @@ class Player
   end
 end
 
-class Dealer
-  include Hand
-  def initialize
-    @hand = Hand.new
-  end
-
-  def hit
-  end
-
-  def stay
-  end
-
-  def busted?
-  end
-
-  def total
-  end
-end
-
-class Participant
-
-end
-
 class Deck
   attr_accessor :cards
 
@@ -86,14 +71,57 @@ end
 
 class Game
   def initialize
+    @deck = Deck.new
+    @player = Player.new
+    @dealer = Dealer.new
+  end
+
+  def deal_cards
+    2.times do
+      player.deal
+      dealer.deal
+    end
+  end
+
+  def show_initial_cards
+    puts "Your hand is #{player.hand}"
+  end
+
+  def player_turn
+    puts "Would you like to hit or stay (h/s)"
+    answer = gets.chomp
+    case answer
+    when 'h'
+      player.hit
+    when 's'
+      player.stay
+    end
+    if player.busted?
+      puts "you busted, sorry"
+    end
+  end
+
+  def dealer_turn
+    loop do
+      unless dealer.total > 17
+        dealer.deal
+      end
+    end
+    if dealer.busted?
+      puts "the Dealer busted, you won!!"
+    end
   end
 
   def start
     deal_cards
     show_initial_cards
-    player_turn
-    dealer_turn
-    show_result
+    loop do
+      player_turn
+      break if player.busted?
+      dealer_turn
+      break if dealer.busted?
+      show_result
+    end
   end
 end
 
