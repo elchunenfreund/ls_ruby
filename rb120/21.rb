@@ -23,28 +23,22 @@ class Card
   end
 
   def suit
-    case @suit
-    when 'H' then 'Hearts'
-    when 'D' then 'Diamonds'
-    when 'S' then 'Spades'
-    when 'C' then 'Clubs'
-    end
+    suit_names = {
+      'H' => 'Hearts',
+      'D' => 'Diamonds',
+      'S' => 'Spades',
+      'C' => 'Clubs'
+    }
+    suit_names[@suit]
   end
 
   def ace?
     face == 'Ace'
   end
 
-  def king?
-    face == 'King'
-  end
-
-  def queen?
-    face == 'Queen'
-  end
-
-  def jack?
-    face == 'Jack'
+  def other_folks?
+    guys = ['King', 'Queen', 'Jack']
+    guys.include?(face)
   end
 end
 
@@ -84,19 +78,14 @@ module Hand
   def total
     total = 0
     cards.each do |card|
-      if card.ace?
-        total += 11
-      elsif card.jack? || card.queen? || card.king?
-        total += 10
-      else
-        total += card.face.to_i
-      end
+      total += card.face.to_i if card.face.to_i.is_a?(Integer)
+      total += 11 if card.ace?
+      total += 10 if card.other_folks?
     end
 
     # correct for Aces
     cards.select(&:ace?).count.times do
-      break if total <= 21
-      total -= 10
+      total -= 10 unless total <= 21
     end
 
     total
@@ -115,6 +104,7 @@ class Participant
   include Hand
 
   attr_accessor :name, :cards
+
   def initialize
     @cards = []
     set_name
@@ -147,7 +137,7 @@ class Dealer < Participant
 
   def show_flop
     puts "---- #{name}'s Hand ----"
-    puts "#{cards.first}"
+    puts cards.first
     puts " ?? "
     puts ""
   end
@@ -180,18 +170,22 @@ class TwentyOne
     dealer.show_flop
   end
 
+  def player_choice
+    puts "Would you like to (h)it or (s)tay?"
+    answer = nil
+    loop do
+      answer = gets.chomp.downcase
+      break if ['h', 's'].include?(answer)
+      puts "Sorry, must enter 'h' or 's'."
+    end
+    answer
+  end
+
   def player_turn
     puts "#{player.name}'s turn..."
 
     loop do
-      puts "Would you like to (h)it or (s)tay?"
-      answer = nil
-      loop do
-        answer = gets.chomp.downcase
-        break if ['h', 's'].include?(answer)
-        puts "Sorry, must enter 'h' or 's'."
-      end
-
+      answer = player_choice
       if answer == 's'
         puts "#{player.name} stays!"
         break
