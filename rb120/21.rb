@@ -109,6 +109,10 @@ class Participant
     @cards = []
     set_name
   end
+
+  def to_s
+    name
+  end
 end
 
 class Player < Participant
@@ -181,37 +185,41 @@ class TwentyOne
     answer
   end
 
+  def player_stays?(answer)
+    if answer == 's'
+      puts "#{player} stays!"
+      return true
+    end
+    false
+  end
+
   def player_turn
-    puts "#{player.name}'s turn..."
+    puts "#{player}'s turn..."
 
     loop do
       answer = player_choice
-      if answer == 's'
-        puts "#{player.name} stays!"
-        break
-      elsif player.busted?
-        break
-      else
-        # show update only for hit
-        player.add_card(deck.deal_one)
-        puts "#{player.name} hits!"
-        player.show_hand
-        break if player.busted?
-      end
+      break if player_stays?(answer)
+      break if player.busted?
+
+      # show update only for hit
+      player.add_card(deck.deal_one)
+      puts "#{player} hits!"
+      player.show_hand
+      break if player.busted?
     end
   end
 
   def dealer_turn
-    puts "#{dealer.name}'s turn..."
+    puts "#{dealer}'s turn..."
 
     loop do
       if dealer.total >= 17 && !dealer.busted?
-        puts "#{dealer.name} stays!"
+        puts "#{dealer} stays!"
         break
       elsif dealer.busted?
         break
       else
-        puts "#{dealer.name} hits!"
+        puts "#{dealer} hits!"
         dealer.add_card(deck.deal_one)
       end
     end
@@ -219,9 +227,9 @@ class TwentyOne
 
   def show_busted
     if player.busted?
-      puts "It looks like #{player.name} busted! #{dealer.name} wins!"
+      puts "It looks like #{player} busted! #{dealer} wins!"
     elsif dealer.busted?
-      puts "It looks like #{dealer.name} busted! #{player.name} wins!"
+      puts "It looks like #{dealer} busted! #{player} wins!"
     end
   end
 
@@ -232,9 +240,9 @@ class TwentyOne
 
   def show_result
     if player.total > dealer.total
-      puts "It looks like #{player.name} wins!"
+      puts "It looks like #{player} wins!"
     elsif player.total < dealer.total
-      puts "It looks like #{dealer.name} wins!"
+      puts "It looks like #{dealer} wins!"
     else
       puts "It's a tie!"
     end
