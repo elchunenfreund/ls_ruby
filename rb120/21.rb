@@ -209,19 +209,23 @@ class TwentyOne
     end
   end
 
+  def dealer_stays?
+    if dealer.total >= 17 && !dealer.busted?
+      puts "#{dealer} stays!"
+      return true
+    end
+    false
+  end
+
   def dealer_turn
     puts "#{dealer}'s turn..."
 
     loop do
-      if dealer.total >= 17 && !dealer.busted?
-        puts "#{dealer} stays!"
-        break
-      elsif dealer.busted?
-        break
-      else
-        puts "#{dealer} hits!"
-        dealer.add_card(deck.deal_one)
-      end
+      break if dealer_stays?
+      break if dealer.busted?
+      # Dealer hits
+      puts "#{dealer} hits!"
+      dealer.add_card(deck.deal_one)
     end
   end
 
