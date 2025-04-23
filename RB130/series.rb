@@ -10,10 +10,6 @@ class Series
     @number.each_cons(int) { |sub| result << sub }
     result
   end
-
-  def self.slices
-    self.new.slices
-  end
 end
 
 series = Series.new('81228')
