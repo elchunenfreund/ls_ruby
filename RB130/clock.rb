@@ -1,31 +1,39 @@
 class Clock
+  MIN_IN_A_DAY = 1440
+
+  attr_reader :hours, :minutes
   def self.at(hr, min = 0)
-    self.new.at(hr, min)
+    new(hr, min)
   end
 
-  def at(hr, min = 0)
-    @hour = min / 60
-    @min = min
-    @time = [@hour, @min]
-    format_time(hr, min)
-  end
+  def initialize(hr, min)
+    total_min = (hr * 60) + min
 
-  def time
-    @time
-  end
+    total_min = total_min % MIN_IN_A_DAY
+    total_min = total_min + MIN_IN_A_DAY if total_min < 0
 
-  def format_time(hours, min)
-    Kernel.format("%02d:%02d", hours, min)
+    @hours = total_min / 60
+    @minutes = total_min % 60
   end
 
   def +(int)
-    puts int
+    self.class.at(hours, minutes + int)
+  end
+
+  def -(int)
+    self.class.at(hours, minutes - int)
+  end
+
+  def ==(other)
+    self.hours == other.hours && self.minutes == other.minutes
   end
 
   def to_s
-    format_time(@hour, @min)
+    format_time(hours, minutes)
+  end
+
+  private
+  def format_time(hours, min)
+    Kernel.format("%02d:%02d", hours, min)
   end
 end
-
-p Clock.at(8).to_s
-
