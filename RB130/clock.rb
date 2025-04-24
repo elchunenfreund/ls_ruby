@@ -29,11 +29,6 @@ class Clock
   end
 
   def to_s
-    format_time(hours, minutes)
-  end
-
-  private
-  def format_time(hours, min)
-    Kernel.format("%02d:%02d", hours, min)
+    format("%02d:%02d", hours, minutes)
   end
 end
