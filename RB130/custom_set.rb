@@ -2,17 +2,16 @@ class CustomSet
   attr_accessor :set
 
   def initialize(set = [])
-    @set = set
+    @set = set.uniq
   end
 
   def add(int)
     set << int unless set.include?(int)
+    self
   end
 
   def subset?(other)
-    return false if other.set.empty? unless set.empty? && other.set.empty?
-    return true if set.all? { |int| other.set.include?(int) }
-    false
+    set.all? { |int| other.set.include?(int) }
   end
 
   def disjoint?(other)
@@ -21,19 +20,19 @@ class CustomSet
   end
 
   def eql?(other)
-    set.uniq.sort == other.set.uniq.sort
+    set.sort == other.set.sort
   end
 
   def intersection(other)
-    result = set.select { |int| other.set.include?(int) }
+    CustomSet.new(set.select { |int| other.set.include?(int) })
   end
 
   def union(other)
-    set.union(other.set)
+    CustomSet.new(set.union(other.set))
   end
 
   def difference(other)
-    result = set.select { |int| !other.set.include?(int) }
+    CustomSet.new(set.select { |int| !other.set.include?(int) })
   end
 
   def contains?(int)
@@ -42,6 +41,10 @@ class CustomSet
 
   def empty?
     set.empty?
+  end
+
+  def ==(other)
+    set.uniq.sort == other.set.uniq.sort
   end
 end
 
