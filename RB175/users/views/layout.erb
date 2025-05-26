@@ -1,6 +1,6 @@
 <html>
 <body>
-  <%= yield %>
-  <p>There are <%= @users.size %> users with a total of <%= count_interests(@users) %> interests. </p>
+  <%= yield %> # this is where the code of user.erb and users.erb are excuted.
+  <p>There are <%= @users.size %> users with a total of <%= count_interests(@users) %> interests. </p> # this is the last line of the executable code which uses the helper method to caluculate what we need.
 </body>
 </html>

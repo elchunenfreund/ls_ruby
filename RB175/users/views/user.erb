@@ -1,15 +1,15 @@
-<h2>Details for <%= @user_name %>:</h2>
+<h2>Details for <%= @user_name %>:</h2> # the actual page for the user which is is referenced the fancy dynamic method
 
 <h4>Email address:</h4>
-<p><%= @email %></p>
+<p><%= @email %></p> # references the email added in by the method
 
 <h4>Interests:</h4>
-<p><%= @interests.join(", ") %></p>
+<p><%= @interests.join(", ") %></p> # references the interests added in by the method
 
 <ul>
-  <% @users.each do |name, _| %>
-    <% unless name == @user_name %>
-      <li><a href="<%= name %>"><%= name %></a></li>
+  <% @users.each do |name, _| %> # uses erb to list all users in a list by referencing the name keys
+    <% unless name == @user_name %> # executable code
+      <li><a href="<%= name %>"><%= name %></a></li> # links that turn into objects in a list.
     <% end %>
   <% end %>
 </ul>
