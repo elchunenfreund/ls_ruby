@@ -1,6 +1,6 @@
 require "tilt/erubi"
 require "sinatra"
-require "sinatra/reloader"
+require "sinatra/reloader" if development?
 
 before do
   @contents = File.readlines("data/toc.txt") # this loads the file containig all chapter names, not sure how that is used.
