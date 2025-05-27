@@ -3,29 +3,29 @@ require "sinatra"
 require "sinatra/reloader"
 
 before do
-  @contents = File.readlines("data/toc.txt")
+  @contents = File.readlines("data/toc.txt") # this loads the file containig all chapter names, not sure how that is used.
 end
 
-get "/" do
-  @title = "The Adventures of Sherlock Holmes"
+get "/" do # routing to the home erb file.
+  @title = "The Adventures of Sherlock Holmes" # hardcode the title name.
 
   erb :home
 end
 
-get "/chapters/:number" do
+get "/chapters/:number" do # uses a url paarameter to assign a chapter number which is then used to search for it.
   number = params[:number].to_i
   chapter_name = @contents[number - 1]
 
-  redirect "/" unless (1..@contents.size).cover? number
+  redirect "/" unless (1..@contents.size).cover? number # redirect to home if out of range, not sure what the cover method is.
 
-  @title = "Chapter #{number}: #{chapter_name}"
-  @chapter = File.read("data/chp#{number}.txt")
+  @title = "Chapter #{number}: #{chapter_name}" # assigns a chapter name.
+  @chapter = File.read("data/chp#{number}.txt") # aasigens the chapter to be rendered in the chapter erb file
 
   erb :chapter
 end
 
 helpers do
-  def in_paragraphs(text)
+  def in_paragraphs(text) # a helper method to split the paragaphs
     text.split("\n\n").each_with_index.map do |line, index|
       "<p id=paragraph#{index}>#{line}</p>"
     end.join
@@ -33,12 +33,12 @@ helpers do
 end
 
 not_found do
-  redirect "/"
+  redirect "/" # redirect to home if not found using a designated sinatra method 
 end
 
 # Calls the block for each chapter, passing that chapter's number, name, and
 # contents.
-def each_chapter
+def each_chapter # costom each method that yields with seperate parameters for the name, name and actual chapter.
   @contents.each_with_index do |name, index|
     number = index + 1
     contents = File.read("data/chp#{number}.txt")
@@ -58,19 +58,19 @@ def chapters_matching(query)
     contents.split("\n\n").each_with_index do |paragraph, index|
       matches[index] = paragraph if paragraph.include?(query)
     end
-    results << {number: number, name: name, paragraphs: matches} if matches.any?
+    results << {number: number, name: name, paragraphs: matches} if matches.any? # returns the chapters that match im not sure how the matching paragraphs are returned.
   end
 
   results
 end
 
 get "/search" do
-  @results = chapters_matching(params[:query])
+  @results = chapters_matching(params[:query]) # passes the search results from the params into the search erb file
   erb :search
 end
 
-helpers do
+helpers do # helper method that highlights the words that match the search query.
   def highlight(text, term)
-    text.gsub(term , %(<strong>#{term}</strong>))
+    text.gsub(term , %(<strong>#{term}</strong>)) 
   end
 end

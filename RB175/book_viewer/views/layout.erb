@@ -6,7 +6,7 @@
 
     <title><%= @title %></title>
 
-    <link rel="stylesheet" href="/stylesheets/pure-min.css">
+    <link rel="stylesheet" href="/stylesheets/pure-min.css"> # links to CSS stylesheets
     <link rel="stylesheet" href="/stylesheets/fonts.css">
     <link rel="stylesheet" href="/stylesheets/book_viewer.css">
   </head>
@@ -20,7 +20,7 @@
           <a class="pure-menu-heading" href="/">Table of Contents</a>
 
           <ul class="pure-menu-list">
-            <% @contents.each_with_index do |chapter, index| %>
+            <% @contents.each_with_index do |chapter, index| %> # creates a list of lins using the file containig chapter names as a refference.
               <li class="pure-menu-item">
                 <a href="/chapters/<%= index + 1 %>" class="pure-menu-link"><%= chapter %></a>
               </li>
