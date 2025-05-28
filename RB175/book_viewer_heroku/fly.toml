@@ -1,0 +1,29 @@
+# fly.toml app configuration file generated for book-viewer-holy-frost-5259 on 2025-05-27T17:26:51-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'book-viewer-holy-frost-5259'
+primary_region = 'yyz'
+
+[build]
+
+[processes]
+web = "bundle exec puma -C config/puma.rb"
+
+[env]
+  RACK_ENV = "production"
+
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['web']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
