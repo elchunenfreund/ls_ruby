@@ -9,7 +9,8 @@ primary_region = 'yyz'
 [build]
 
 [processes]
-web = "/bin/sh -c 'bundle exec puma -t 5:5 -b tcp://0.0.0.0:${PORT:-8080}'"
+web = ["/bin/sh", "-c",
+       "exec bundle exec puma -t 5:5 -b tcp://0.0.0.0:${PORT:-8080}"]
 
 [http_service]
   internal_port = 8080
