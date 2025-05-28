@@ -11,6 +11,9 @@ primary_region = 'yyz'
 [processes]
 web = "bundle exec puma -C config/puma.rb"
 
+[env]
+  RACK_ENV = "production"
+
 
 [http_service]
   internal_port = 8080
