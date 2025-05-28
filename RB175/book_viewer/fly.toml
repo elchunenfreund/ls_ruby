@@ -8,9 +8,8 @@ primary_region = 'yyz'
 
 [build]
 
-# fly.toml  ─── only the relevant bit
 [processes]
-web = '''/bin/sh -c "exec bundle exec puma -t 5:5 -b tcp://0.0.0.0:${PORT:-8080}"'''
+web = "/bin/sh -c \"exec bundle exec puma -t 5:5 -b tcp://0.0.0.0:${PORT}\""
 
 
 [http_service]
