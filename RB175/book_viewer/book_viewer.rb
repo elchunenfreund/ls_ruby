@@ -2,12 +2,6 @@ require "tilt/erubi"
 require "sinatra"
 require "sinatra/reloader" if development?
 
-# configure :production do
-#   # Whitelist Fly.io’s host header so Rack::Protection doesn’t reject it.
-#   use Rack::Protection::HostHeader,
-#       allow: ['book-viewer-holy-frost-5259.fly.dev']
-# end
-
 before do
   @contents = File.readlines("data/toc.txt") # this loads the file containig all chapter names, not sure how that is used.
 end

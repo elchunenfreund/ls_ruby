@@ -2,7 +2,7 @@
 
 <div class="pure-menu">
   <ul class="pure-menu-list">
-    <% @contents.each_with_index do |chapter, index| %> # erb file that iterates over each chapter (in the list of chapters) and creates links to them adding all to a list.
+    <% @contents.each_with_index do |chapter, index| %>
       <li class="pure-menu-item">
         <a href="/chapters/<%= index + 1 %>" class="pure-menu-link"><%= chapter %></a>
       </li>
