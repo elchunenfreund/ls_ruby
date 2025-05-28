@@ -2,11 +2,11 @@ require "tilt/erubi"
 require "sinatra"
 require "sinatra/reloader" if development?
 
-configure :production do
-  # Whitelist Fly.io’s host header so Rack::Protection doesn’t reject it.
-  use Rack::Protection::HostHeader,
-      allow: ['book-viewer-holy-frost-5259.fly.dev']
-end
+# configure :production do
+#   # Whitelist Fly.io’s host header so Rack::Protection doesn’t reject it.
+#   use Rack::Protection::HostHeader,
+#       allow: ['book-viewer-holy-frost-5259.fly.dev']
+# end
 
 before do
   @contents = File.readlines("data/toc.txt") # this loads the file containig all chapter names, not sure how that is used.
@@ -39,7 +39,7 @@ helpers do
 end
 
 not_found do
-  redirect "/" # redirect to home if not found using a designated sinatra method 
+  redirect "/" # redirect to home if not found using a designated sinatra method
 end
 
 # Calls the block for each chapter, passing that chapter's number, name, and
@@ -77,6 +77,6 @@ end
 
 helpers do # helper method that highlights the words that match the search query.
   def highlight(text, term)
-    text.gsub(term , %(<strong>#{term}</strong>)) 
+    text.gsub(term , %(<strong>#{term}</strong>))
   end
 end
