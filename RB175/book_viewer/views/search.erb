@@ -1,27 +1,26 @@
 <h2 class="content-subhead">Search</h2>
 
-<form action="/search" method="get"> # this creates a search form
-  <input name="query" value="<%= params[:query] %>"/> # displays the object in the params hash in search to the search bar
-  <button type="submit">Search</button> # creates a search button
+<form action="/search" method="get">
+  <input name="query" value="<%= params[:query] %>"/>
+  <button type="submit">Search</button>
 </form>
 
-<% if params[:query] %> # erb executable if there is a param paramter
+<% if params[:query] %>
 
-  <% if @results.empty? %> # retun a message if no results are found
+  <% if @results.empty? %>
     <p>Sorry, no matches were found.</p>
   <% else %>
     <h2 class="content-subhead">Results for '<%= params[:query]%>'</h2> # results header
 
     <ul> # creates a list
-      <% @results.each do |result| %> # erb executable to iterate over each search result.
-        <li> 
-          <h4><%= result[:name] %></h4> # create a result header
+      <% @results.each do |result| %>
+        <li>
+          <h4><%= result[:name] %></h4>
           <ul>
-            <% result[:paragraphs].each do |index, text| %> # another list to create a seperate list for all reults in a single chapter.
+            <% result[:paragraphs].each do |index, text| %>
               <li>
-                <a href="/chapters/<%= result[:number] %>#paragraph<%= index %>"> # create a link to the paragraph
-                  <%= highlight(text, params[:query]) %> # highlight the text using the special method.
-                </a>
+                <a href="/chapters/<%= result[:number] %>#paragraph<%= index %>">
+                  <%= highlight(text, params[:query]) %>
               </li>
             <% end %>
           </ul>
