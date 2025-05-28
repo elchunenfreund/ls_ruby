@@ -39,6 +39,7 @@ PLATFORMS
   arm64-darwin-22
   ruby
   x64-mingw-ucrt
+  x86_64-linux
 
 DEPENDENCIES
   erubi
