@@ -1,0 +1,14 @@
+<ul>
+  <% @files.each do |file| %>
+    <li>
+      <a href="<%= file %>"><%= file %></a> # creates a link in a list for each alll files in the files variable.
+    </li>
+  <% end %>
+</ul>
+
+<p>
+  <% if params[:sort] == "desc" %>  # changes the link to to asssign to assending or desending depending on the params variable.
+    <a href="/">Sort ascending</a> # returns to the basic home route with out the "desc" params query strings 
+  <% else %>
+    <a href="/?sort=desc">Sort descending</a> # changes the sort query strings (after the ?) to desc like requested.
+</p>

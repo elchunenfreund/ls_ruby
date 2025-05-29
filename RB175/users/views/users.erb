@@ -1,0 +1,12 @@
+<h1>Users</h1> # first a html header, since this file will render
+<ul> # unordered list opening tag
+  <% @users.keys.each do |name| %> # erb tags that execute
+    <li> # html list header
+      <a href="/<%= name %>"> # this is erb code that we want to execute and display as this will be the actual url
+        <%= name %> # the text on the link url
+      </a> # anchor closing tag
+    </li> # list object closing tat
+  <% end %> # erb closing tag
+</ul> # unordered list closeing list
+
+
