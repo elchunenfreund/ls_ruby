@@ -1,8 +1,10 @@
 <ul id="lists">
-  <% @lists.each do |list| %>
+  <% @lists.each_with_index do |list, list_index| %>
     <li>
-      <h2><%= list[:name] %></h2>
-      <p><%= list[:todos].size %></p>
+      <a href >
+        <h2><%= list[:name] %></h2>
+        <p><%= list[:todos].size %></p>
+        <% params[:index] = list_index %>
       </a>
     </li>
   <% end %>
