@@ -27,7 +27,8 @@ get "/lists/new" do
 end
 
 get "/lists/:index" do
-  erb :list
+  @list  = session[:lists][params[:index].to_i]
+  erb :list, layout: :layout
 end
 
 # Return an error message if hte name is invalid. return nil if name valid
