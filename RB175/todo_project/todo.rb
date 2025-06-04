@@ -1,5 +1,6 @@
 require "sinatra"
 require "sinatra/reloader"
+require "sinatra/content_for"
 require "tilt/erubi"
 
 configure do
@@ -31,6 +32,11 @@ get "/lists/:index" do
   erb :list, layout: :layout
 end
 
+get '/lists/:index/edit' do
+  @list  = session[:lists][params[:index].to_i]
+  erb :edit_list, layout: :layout
+end
+
 # Return an error message if hte name is invalid. return nil if name valid
 def error_for_list_name(name)
   if !(1..100).cover? name.size
@@ -54,5 +60,20 @@ post "/lists" do
     session[:lists] << { name: list_name, todos: [] }
     session[:success] = "The list has been created."
     redirect "/lists"
+  end
+end
+
+# Change list name
+post "/lists/:index" do
+  list_name = params[:list_name].strip
+
+  error = error_for_list_name(list_name)
+  if error
+    session[:error] = error
+    erb :edit_list, layout: :layout
+  else
+    session[:lists][params[:index].to_i][:name] = list_name
+    session[:success] = "The list name has been changed."
+    redirect "/lists/:index"
   end
 end
