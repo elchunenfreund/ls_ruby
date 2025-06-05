@@ -65,15 +65,18 @@ end
 
 # Change list name
 post "/lists/:index" do
+  @list  = session[:lists][params[:index].to_i]
   list_name = params[:list_name].strip
+  index = params[:index].to_i
 
   error = error_for_list_name(list_name)
   if error
     session[:error] = error
     erb :edit_list, layout: :layout
   else
-    session[:lists][params[:index].to_i][:name] = list_name
-    session[:success] = "The list name has been changed."
-    redirect "/lists/:index"
+    @list[:name] = list_name
+
+    session[:success] = "The list has been updated."
+    redirect "/lists/#{index}"
   end
 end
