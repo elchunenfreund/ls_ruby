@@ -1,4 +1,12 @@
+<section id="todos">
+<form action="/lists/<%= params[:index] %>/delete" method="post">
+  <input type="hidden" name="_method" value="delete"> <!-- Hidden input to simulate DELETE method -->
+  <button type="submit" class="todos">Delete List</button> <!-- Delete button -->
+</form>
+</section>
+
 <form action="/lists/<%=params[:index]%>" method="post">
+
   <dl>
     <dt>
       <label for="list_name">Enter the new name for the list</label>

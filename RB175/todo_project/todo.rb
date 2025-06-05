@@ -80,3 +80,7 @@ post "/lists/:index" do
     redirect "/lists/#{index}"
   end
 end
+
+post '/lists/:index/delete' do
+  "Hello World"
+end
