@@ -65,9 +65,9 @@ end
 
 # Change list name
 post "/lists/:index" do
-  @list  = session[:lists][params[:index].to_i]
   list_name = params[:list_name].strip
   index = params[:index].to_i
+  @list  = session[:lists][index]
 
   error = error_for_list_name(list_name)
   if error
@@ -81,6 +81,19 @@ post "/lists/:index" do
   end
 end
 
+# Delete a todo list
 post '/lists/:index/delete' do
-  "Hello World"
+  index = params[:index].to_i
+  session[:lists].delete_at(index)
+  session[:success] = "The list has been deleted"
+  redirect "/lists"
 end
+
+# Add a new todo to a list
+# post '/lists/:index/todos' do
+#   index = params[:index].to_i
+#   list  = session[:lists][index]
+#   list[:todos] << { name: params[:todo], completed: false }
+#   session[:success] = "The todo was added"
+#   # redirect "/lists/#{index}"
+# end
