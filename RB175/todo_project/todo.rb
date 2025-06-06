@@ -27,11 +27,14 @@ get "/lists/new" do
   erb :new_list, layout: :layout
 end
 
+# View a single todo list
 get "/lists/:index" do
-  @list  = session[:lists][params[:index].to_i]
+  @list_id = params[:index].to_i
+  @list = session[:lists][@list_id]
   erb :list, layout: :layout
 end
 
+# Update a single todo list
 get '/lists/:index/edit' do
   @list  = session[:lists][params[:index].to_i]
   erb :edit_list, layout: :layout
@@ -43,6 +46,14 @@ def error_for_list_name(name)
     "List name must between 1 and 100 characters."
   elsif session[:lists].any? { |list| list[:name] == name }
     "List name must be unique."
+  else
+    nil
+  end
+end
+
+def error_for_todo(name)
+  if !(1..100).cover? name.size
+    "Todo must between 1 and 100 characters."
   else
     nil
   end
@@ -90,10 +101,18 @@ post '/lists/:index/delete' do
 end
 
 # Add a new todo to a list
-# post '/lists/:index/todos' do
-#   index = params[:index].to_i
-#   list  = session[:lists][index]
-#   list[:todos] << { name: params[:todo], completed: false }
-#   session[:success] = "The todo was added"
-#   # redirect "/lists/#{index}"
-# end
+post '/lists/:list_id/todos' do
+  @list_id = params[:list_id].to_i
+  @list = session[:lists][@list_id]
+  text = params[:todo].strip
+
+  error = error_for_todo(text)
+  if error
+    session[:error] = error
+    erb :list, layout: :layout
+  else
+    @list[:todos] << { name: text, completed: false }
+    session[:success] = "The todo was added"
+    redirect "/lists/#{@list_id}"
+  end
+end
