@@ -1,6 +1,10 @@
 <ul id="lists">
   <% @lists.each_with_index do |list, list_index| %>
-    <li>
+   <% if list[:todos].size > 1 && list[:todos].all?{ |todo| todo[:completed]} %>
+      <li class="complete">
+    <% else %>
+      <li>
+    <% end %>
       <a href="/lists/<%=list_index%>">
         <h2><%= list[:name] %></h2>
         <p><%= list[:todos].size %></p>
