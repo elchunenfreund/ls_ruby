@@ -8,6 +8,10 @@ configure do
   set :session_secret, SecureRandom.hex(32)
 end
 
+configure do
+  set :erb, :escape_html => true
+end
+
 before do
   session[:lists] ||= []
 end
@@ -62,14 +66,25 @@ end
 # View a single todo list
 get "/lists/:index" do
   @list_id = params[:index].to_i
-  @list = session[:lists][@list_id]
-  erb :list, layout: :layout
+  @list = load_list(@load_list)
+    erb :list, layout: :layout
+  end
 end
 
-# Update a single todo list
+# Edit an existing todo list
 get '/lists/:index/edit' do
-  @list  = session[:lists][params[:index].to_i]
+  @index = params[:index]
+  @list  = load_list(@index)
   erb :edit_list, layout: :layout
+end
+
+# Validate list entry
+def load_list(index)
+  list = session[:lists][index] if index && session[:lists][index]
+  return list if list
+
+  session[:error] = "The specified list was not found."
+  redirect "/lists"
 end
 
 # Return an error message if hte name is invalid. return nil if name valid
@@ -135,7 +150,7 @@ end
 # Add a new todo to a list
 post '/lists/:list_id/todos' do
   @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  @list = load_list(@list_id)
   text = params[:todo].strip
 
   error = error_for_todo(text)
@@ -153,7 +168,7 @@ end
 post '/list/:list_id/todos/:todo_id/destroy' do
   @list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
-  @list = session[:lists][@list_id]
+  @list = load_list(@list_id)
   @list[:todos].delete_at(todo_id)
   session[:success] = "The todo has been deleted"
   redirect "/lists/#{@list_id}"
@@ -162,7 +177,7 @@ end
 # Update the status of a todo
 post '/list/:list_id/todos/:todo_id' do
   @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  @list = load_list(@list_id)
 
   todo_id = params[:todo_id].to_i
   is_completed = params[:completed] == "true"
@@ -175,7 +190,7 @@ end
 # Mark all todos as complete
 post '/list/:list_id/complete_all' do
   @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  @list = load_list(@list_id)
 
   @list[:todos].each do |todo|
     todo[:completed] = true
