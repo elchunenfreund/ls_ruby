@@ -72,7 +72,7 @@ end
 
 # Edit an existing todo list
 get '/lists/:index/edit' do
-  @index = params[:index]
+  @index = params[:index].to_i
   @list  = load_list(@index)
   erb :edit_list, layout: :layout
 end
