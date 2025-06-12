@@ -66,7 +66,7 @@ end
 # View a single todo list
 get "/lists/:index" do
   @list_id = params[:index].to_i
-  @list = load_list(@load_list)
+  @list = load_list(@list_id)
     erb :list, layout: :layout
 end
 
