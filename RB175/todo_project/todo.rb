@@ -68,7 +68,6 @@ get "/lists/:index" do
   @list_id = params[:index].to_i
   @list = load_list(@load_list)
     erb :list, layout: :layout
-  end
 end
 
 # Edit an existing todo list
