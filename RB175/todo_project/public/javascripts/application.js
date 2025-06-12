@@ -4,7 +4,7 @@ $(function() {
     event.preventDefault();
     event.stopPropagation();
 
-    var ok = confirm("Are you sure this can not be undone!");
+    var ok = confirm("Are you sure? This cannot be undone!");
     if (ok) {
       this.submit();
     }
