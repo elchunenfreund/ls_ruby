@@ -4,3 +4,6 @@ gem "sinatra"
 gem "sinatra-contrib"
 gem 'rackup'
 gem 'puma'
+gem "erubi"
+gem "minitest"
+gem "rack-test"
