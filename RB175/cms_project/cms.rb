@@ -39,6 +39,8 @@ end
 
 # Home page, list of files.
 get "/" do
+  # redirect "/users/signin" unless session[:varified] == "true"
+
   pattern = File.join(data_path, "*")
   @files = Dir.glob(pattern).map do |path|
     File.basename(path)
@@ -109,5 +111,32 @@ post "/:filename/delete" do
 
   File.delete(file_path)
   session[:message] = "#{params[:filename]} has been deleted."
+  redirect "/"
+end
+
+# Sigh in form
+get "/users/signin" do
+  erb :signin
+end
+
+# Sign in proccess
+post "/users/signin" do
+  session[:username] = params[:username]
+
+  if params[:username] == "admin" && params[:password] == "secret"
+    session[:varified] = "true"
+    session[:message] = "Welcome!"
+    redirect "/"
+  else
+    session[:message] = "Invalid credentials"
+    status 422
+    erb :signin
+  end
+end
+
+# Sign out
+post "/users/signout" do
+  session.delete(:varified)
+  session[:message] = "You have been signed out."
   redirect "/"
 end
