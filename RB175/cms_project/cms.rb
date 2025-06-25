@@ -10,6 +10,7 @@ configure do
   set :session_secret, SecureRandom.hex(32)
 end
 
+# Generate the data path while acounting for the testing enviorment.
 def data_path
   if ENV["RACK_ENV"] == "test"
     File.expand_path("../test/data", __FILE__)
@@ -25,14 +26,14 @@ def render_markdown(text)
 end
 
 # Load the file in the correct format
-def load_file_contant(path)
+def load_file_content(path)
   content = File.read(path)
   case File.extname(path)
   when ".txt"
     headers["Content-Type"] = "text/plain"
     content
   when ".md"
-    render_markdown(content)
+    erb render_markdown(content)
   end
 end
 
@@ -46,12 +47,37 @@ get "/" do
   erb :index
 end
 
+# Route to new file form
+get "/new" do
+  erb :new
+end
+
+# Create a new file
+post "/create" do
+  filename = params[:filename].to_s
+
+  if filename.size == 0
+    session[:message] = "A name is required."
+    status 422
+    erb :new
+  elsif !filename.end_with?('.txt', '.md')
+    session[:message] = "File must have a .txt or .md extension."
+    status 422
+    erb :new
+  else
+    file_path = File.join(data_path, filename)
+    File.write(file_path, "")
+    session[:message] = "#{params[:filename]} has been created."
+    redirect "/"
+  end
+end
+
 # view file, and throw error if file doesnt exist
 get "/:filename" do
   file_path = File.join(data_path, params[:filename])
 
   if File.exist?(file_path)
-    load_file_contant(file_path)
+    load_file_content(file_path)
   else
     session[:message] = "#{params[:filename]} does not exist."
     redirect "/"
@@ -67,11 +93,21 @@ get "/:filename/edit" do
   erb :edit
 end
 
+# Edit file content
 post "/:filename" do
   file_path = File.join(data_path, params[:filename])
 
   File.write(file_path, params[:content])
 
   session[:message] = "#{params[:filename]} has been updated."
+  redirect "/"
+end
+
+# Delete File
+post "/:filename/delete" do
+  file_path = File.join(data_path, params[:filename])
+
+  File.delete(file_path)
+  session[:message] = "#{params[:filename]} has been deleted."
   redirect "/"
 end
