@@ -12,7 +12,7 @@
 
 <p><a href="/new">New Document</a></p>
 
-<%if session[:varified] == "true" %>
+<%if session[:username] %>
   <p>
     Signed in as <%= session[:username]%>
     <form class="inline" method="post" action="/users/signout">
@@ -20,7 +20,7 @@
     </form>
   </p>
 <% else %>
-  <p class="user-status"><a href="/users/signin">Sign in</a></p>
+  <p class="user-status"><a href="/users/signin">Sign In</a></p>
 <% end %>
 
 

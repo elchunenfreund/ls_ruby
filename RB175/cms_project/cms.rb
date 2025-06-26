@@ -2,6 +2,8 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubi"
 require "redcarpet"
+require "yaml"
+require "bcrypt"
 
 root = File.expand_path("..", __FILE__)
 
@@ -37,10 +39,40 @@ def load_file_content(path)
   end
 end
 
+# Load file with users and passwords
+def load_user_credentials
+  credentials_path = if ENV["RACK_ENV"] == 'test'
+    File.expand_path("../test/users.yml", __FILE__)
+  else
+    File.expand_path("../users.yml", __FILE__)
+  end
+  YAML.load_file(credentials_path)
+end
+
+def valid_credentials?(username, password)
+  credentials = load_user_credentials
+
+  if credentials.key?(username)
+    bcrypt_password = BCrypt::Password.new(credentials[username])
+    bcrypt_password == password
+  else
+    false
+  end
+end
+
+def user_signed_in?
+  session.key?(:username)
+end
+
+def require_signed_in_user
+  unless user_signed_in?
+    session[:message] = "You must be signed in to do that."
+    redirect "/"
+  end
+end
+
 # Home page, list of files.
 get "/" do
-  # redirect "/users/signin" unless session[:varified] == "true"
-
   pattern = File.join(data_path, "*")
   @files = Dir.glob(pattern).map do |path|
     File.basename(path)
@@ -49,13 +81,16 @@ get "/" do
   erb :index
 end
 
-# Route to new file form
+# Route to new file form if signed in.
 get "/new" do
+  require_signed_in_user
   erb :new
 end
 
 # Create a new file
 post "/create" do
+  require_signed_in_user
+
   filename = params[:filename].to_s
 
   if filename.size == 0
@@ -88,6 +123,8 @@ end
 
 # Edit file
 get "/:filename/edit" do
+  require_signed_in_user
+
   file_path = File.join(data_path, params[:filename])
 
   @filename = params[:filename]
@@ -97,6 +134,8 @@ end
 
 # Edit file content
 post "/:filename" do
+  require_signed_in_user
+
   file_path = File.join(data_path, params[:filename])
 
   File.write(file_path, params[:content])
@@ -107,6 +146,8 @@ end
 
 # Delete File
 post "/:filename/delete" do
+  require_signed_in_user
+
   file_path = File.join(data_path, params[:filename])
 
   File.delete(file_path)
@@ -121,10 +162,11 @@ end
 
 # Sign in proccess
 post "/users/signin" do
-  session[:username] = params[:username]
+  credentials = load_user_credentials
+  username = params[:username]
 
-  if params[:username] == "admin" && params[:password] == "secret"
-    session[:varified] = "true"
+  if valid_credentials?(username, params[:password])
+    session[:username] = username
     session[:message] = "Welcome!"
     redirect "/"
   else
@@ -136,7 +178,6 @@ end
 
 # Sign out
 post "/users/signout" do
-  session.delete(:varified)
   session.delete(:username)
   session[:message] = "You have been signed out."
   redirect "/"
