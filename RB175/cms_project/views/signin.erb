@@ -1,11 +1,13 @@
 <form method="post" action="/users/signin">
     <div>
-      <label class="inline" for="username">Username</label>
-      <input name="username" id="username" value="<%=session[:username]%>"/>
+      <label for="username">Username:
+        <input name="username" id="username" value="<%=session[:username]%>"/>
+      </label>
     </div>
     <div>
-      <label class="inline" for="password">Password</label>
-      <input name="password" id="password"/>
+      <label class="inline" for="password">Password
+        <input name="password" id="password"/>
+      </label>
     </div>
     <button type="submit">Sign In</button>
 </form>
