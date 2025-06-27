@@ -49,6 +49,7 @@ def load_user_credentials
   YAML.load_file(credentials_path)
 end
 
+# varify creditentials using bcrypt
 def valid_credentials?(username, password)
   credentials = load_user_credentials
 
@@ -144,8 +145,25 @@ post "/:filename" do
   redirect "/"
 end
 
+# path to choose a name for a new file
+get "/:filename/duplicate" do
+  require_signed_in_user
+  @filename = params[:filename]
+
+  erb :dupfile
+end
+
+# duplicate a file
+post "/:filename/duplicate" do
+  # require_signed_in_user
+
+  # take user to the new_file form to enter a new name (later: ensure names are uniq)
+
+  # create a file with the chosen name and old contant
+end
+
 # Delete File
-post "/:filename/delete" do
+post "/:filename/destroy" do
   require_signed_in_user
 
   file_path = File.join(data_path, params[:filename])
