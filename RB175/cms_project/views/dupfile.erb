@@ -1,7 +1,7 @@
 <form method="post" action="/<%= @filename %>/duplicate">
-    <label for="filename">Add a new document:</label>
+    <label for="newfilename">Enter a name for you copy (Note that the name must be unique)</label>
     <div>
-      <input name="filename" id="filename"/>
+      <input name="newfilename" value="<%= @filename %>" id="newfilename">
       <button type="submit">Create</button>
     </div>
 </form>

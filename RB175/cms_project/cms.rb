@@ -72,12 +72,19 @@ def require_signed_in_user
   end
 end
 
-# Home page, list of files.
-get "/" do
+def list_of_files
   pattern = File.join(data_path, "*")
-  @files = Dir.glob(pattern).map do |path|
+  files = Dir.glob(pattern).map do |path|
     File.basename(path)
   end
+
+  files
+end
+
+# Home page, list of files.
+get "/" do
+
+  @files = list_of_files
 
   erb :index
 end
@@ -145,17 +152,36 @@ post "/:filename" do
   redirect "/"
 end
 
+get "/:filename/duplicate" do
+  require_signed_in_user
+
+  @filename = params[:filename]
+
+  erb :dupfile
+end
+
 # duplicate a file
 post "/:filename/duplicate" do
   require_signed_in_user
 
-  filename = params[:filename].to_s
-  file_path = File.join(data_path, filename)
-  content = File.read(file_path)
+  old_filename = params[:filename].to_s
+  new_filename = params[:newfilename]
 
-  File.write(file_path, content)
-  session[:message] = "a copy of #{params[:filename]} has been created."
-  redirect "/"
+  orignal_path = File.join(data_path, old_filename)
+  new_path = File.join(data_path, new_filename)
+
+  content = File.read(orignal_path)
+
+
+  if list_of_files.include?(new_filename)
+    session[:message] = "You need to choose a unique a name"
+    @filename = new_filename
+    erb :dupfile
+  else
+    File.write(new_path, content)
+    session[:message] = "a copy of #{params[:filename]} has been created."
+    redirect "/"
+  end
 end
 
 # Delete File
