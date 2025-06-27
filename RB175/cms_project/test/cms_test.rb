@@ -155,7 +155,7 @@ class CMSTest < Minitest::Test
   def test_deleting_document
     create_document("test.txt")
 
-    post "/test.txt/delete", {}, admin_session
+    post "/test.txt/destroy", {}, admin_session
 
     assert_equal 302, last_response.status
 
@@ -168,7 +168,7 @@ class CMSTest < Minitest::Test
   def test_deleting_document_signed_out
     create_document("test.txt")
 
-    post "/test.txt/delete"
+    post "/test.txt/destroy"
     assert_equal 302, last_response.status
     assert_equal "You must be signed in to do that.", session[:message]
   end

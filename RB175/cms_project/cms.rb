@@ -171,10 +171,10 @@ post "/:filename/duplicate" do
   old_filename = params[:filename].to_s
   new_filename = params[:newfilename]
 
-  orignal_path = File.join(data_path, old_filename)
+  original_path = File.join(data_path, old_filename)
   new_path = File.join(data_path, new_filename)
 
-  content = File.read(orignal_path)
+  content = File.read(original_path)
 
 
   if list_of_files.include?(new_filename)
