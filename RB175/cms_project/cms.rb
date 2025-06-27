@@ -145,21 +145,17 @@ post "/:filename" do
   redirect "/"
 end
 
-# path to choose a name for a new file
-get "/:filename/duplicate" do
-  require_signed_in_user
-  @filename = params[:filename]
-
-  erb :dupfile
-end
-
 # duplicate a file
 post "/:filename/duplicate" do
-  # require_signed_in_user
+  require_signed_in_user
 
-  # take user to the new_file form to enter a new name (later: ensure names are uniq)
+  filename = params[:filename].to_s
+  file_path = File.join(data_path, filename)
+  content = File.read(file_path)
 
-  # create a file with the chosen name and old contant
+  File.write(file_path, content)
+  session[:message] = "a copy of #{params[:filename]} has been created."
+  redirect "/"
 end
 
 # Delete File
