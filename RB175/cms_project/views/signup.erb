@@ -1,0 +1,19 @@
+<form method="post" action="/users/signup">
+  <p>Enter a new Username and Password:</p>
+  <div>
+    <label for="username">Username:
+      <input name="username" id="username" value="<%= @username %>"/>
+    </label>
+  </div>
+  <div>
+    <label class="inline" for="password">Password:
+      <input name="password1" id="password1"/>
+    </label>
+  </div>
+  <div>
+    <label for="password">Confirm your Password:
+      <input name="password2" id="password2"/>
+    </label>
+  </div>
+  <button type="submit">Register</button>
+</form>

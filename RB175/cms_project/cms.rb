@@ -228,24 +228,27 @@ post "/users/signout" do
 end
 
 # add a new user
-get '/users/signon' do
-  erb :signon
+get '/users/signup' do
+  erb :signup
 end
 
 # add username and password to the yaml file
-post "/users/signon" do
+post "/users/signup" do
   username = params[:username].to_s
-  password = params[:password].to_s
+  password = params[:password1].to_s
   creds = YAML.load_file(credentials_path)
 
   if username.empty? || password.empty?
     session[:message] = "You need to enter a valid Username and Password"
-    erb :signon
-  elsif
-    creds.keys.include?(username)
+    erb :signup
+  elsif creds.keys.include?(username)
     session[:message] = "Your Username has to be unique."
     @username = username
-    erb :signon
+    erb :signup
+  elsif password != params[:password2].to_s
+    session[:message] = "Your passwords need to match."
+    @username = username
+    erb :signup
   else
     creds[username] = BCrypt::Password.create(password).to_s
 
