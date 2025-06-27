@@ -1,7 +1,9 @@
-{
-  bill: $2a$12$AbdvorYbE1v1PJIYMhmil.NM/gi54iVAgaLmZIDCkSjzccINFuPne,
-  sonia: $2a$12$9L9f0BaQqRGsFTvDsCPQhexHyCRP0lkQASHpqlmjBlWjVv8VSXuDG,
-  chunie: $2a$12$9gSq1MllpY26koHYAjHztu3nRiygoUr4HRekKw.D5A9QM6ocqxBuW,
-  admin: $2a$12$jshdh4x/MD6V.D2yDEql9.A3dwy.4lNoLb8D6e/0UEeW4KRA5odmG,
-  developer: $2a$12$yjnYBHn.o5jqsYN8MXweJeXvVeCUbEYPQPGXX.5Ro9AwRnqYsiwmi
-}
+---
+bill: "$2a$12$AbdvorYbE1v1PJIYMhmil.NM/gi54iVAgaLmZIDCkSjzccINFuPne"
+sonia: "$2a$12$9L9f0BaQqRGsFTvDsCPQhexHyCRP0lkQASHpqlmjBlWjVv8VSXuDG"
+chunie: "$2a$12$9gSq1MllpY26koHYAjHztu3nRiygoUr4HRekKw.D5A9QM6ocqxBuW"
+admin: "$2a$12$K28hpR/gFgVF6r9oS4S2oOeyIVt.Aj.zKxocLh332452sxa5CpY8G"
+developer: "$2a$12$yjnYBHn.o5jqsYN8MXweJeXvVeCUbEYPQPGXX.5Ro9AwRnqYsiwmi"
+hello: "$2a$12$07vTJIt.bkPXy/XOH2dAK.orhEP1IqtNPvajDIwgyhHIMiEdoKqlq"
+clown: "$2a$12$ulfxfBwM0zR0MEpJfDYYDu4NSuvvO6NAnSb0byYaSx6NkRUPi5YPe"
+clowny: "$2a$12$Z4.RB9KOaZmTbaaMfh91Xe1s9BRxXFTmo.a4vFkiUGQ9z/C21bNiW"

@@ -39,13 +39,17 @@ def load_file_content(path)
   end
 end
 
-# Load file with users and passwords
-def load_user_credentials
-  credentials_path = if ENV["RACK_ENV"] == 'test'
+def credentials_path
+  path = if ENV["RACK_ENV"] == 'test'
     File.expand_path("../test/users.yml", __FILE__)
   else
     File.expand_path("../users.yml", __FILE__)
   end
+  path
+end
+
+# Load file with users and passwords
+def load_user_credentials
   YAML.load_file(credentials_path)
 end
 
@@ -221,4 +225,35 @@ post "/users/signout" do
   session.delete(:username)
   session[:message] = "You have been signed out."
   redirect "/"
+end
+
+# add a new user
+get '/users/signon' do
+  erb :signon
+end
+
+# add username and password to the yaml file
+post "/users/signon" do
+  username = params[:username].to_s
+  password = params[:password].to_s
+  creds = YAML.load_file(credentials_path)
+
+  if username.empty? || password.empty?
+    session[:message] = "You need to enter a valid Username and Password"
+    erb :signon
+  elsif
+    creds.keys.include?(username)
+    session[:message] = "Your Username has to be unique."
+    @username = username
+    erb :signon
+  else
+    creds[username] = BCrypt::Password.create(password).to_s
+
+    File.open(credentials_path, 'w') do |f|
+      f.write creds.to_yaml
+    end
+
+    session[:message] = "You have successfully registered."
+    redirect "/"
+  end
 end
