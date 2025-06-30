@@ -31,7 +31,7 @@ end
 
 post '/flight/details' do
   if params[:origin] == params[:destination]
-    session[:message] = 'You dont really want to take a flight that will arive at the same boring place you left from, or do you?'
+    session[:message] = "You don't really want to take a flight that will arive at the same boring place you left from, or do you?"
     redirect "/"
   end
 
@@ -39,11 +39,31 @@ post '/flight/details' do
   session[:number] = params[:number]
   session[:origin] = params[:origin]
   session[:destination] = params[:destination]
-  hour = "#{"%02d" % params[:hour]}"
-  minute = "#{"%02d" % params[:minute]}"
-  session[:time] = "#{hour}:#{minute} #{params[:meridiem]}"
+  session[:hour] = "#{"%02d" % params[:hour]}"
+  session[:minute] = "#{"%02d" % params[:minute]}"
+  session[:meridiem] = params[:meridiem]
+  session[:time] = "#{session[:hour]}:#{session[:minute]} #{session[:meridiem]}"
 
   session[:message] = "Your details have been saved."
 
   erb :details
+end
+
+post '/flights/add' do
+  flights = YAML.load_file("flights.yml")
+
+  flightname = params[:flightname]
+  flights[flightname] = { airline: session[:airline],
+                          number: session[:number],
+                          origin: session[:origin],
+                          destination: session[:destination],
+                          time: session[:time]  }
+
+  File.open("flights.yml", 'w') do |f|
+    f.write flights.to_yaml
+  end
+
+  session.clear
+  session[:message] = "Your flight has been saved."
+  redirect "/"
 end
